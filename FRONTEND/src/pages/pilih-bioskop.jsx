@@ -1,0 +1,218 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../styles/Pilih-Bioskop.css';
+
+function PilihBioskop() {
+  const navigate = useNavigate()
+
+  const goToProfile = () => {
+    navigate('/profile', {
+      state: { from: '/pilih-bioskop'}
+    })
+  }
+
+  const [ticketPrice, setTicketPrice] = useState(0);
+  const [selectedDate, setSelectedDate] = useState('10 Oktober');
+
+  // Data mock untuk setiap tanggal
+  const theatreData = {
+    '10 Oktober': [
+      { name: 'Bioskop A', address: 'Alamat A' },
+      { name: 'Bioskop B', address: 'Alamat B' },
+    ],
+    '11 Oktober': [
+      { name: 'Bioskop C', address: 'Alamat C' },
+      { name: 'Bioskop D', address: 'Alamat D' },
+    ],
+    '12 Oktober': [
+      { name: 'Bioskop E', address: 'Alamat E' },
+      { name: 'Bioskop F', address: 'Alamat F' },
+    ],
+  };
+
+  const handleSetPrice = (price) => {
+    setTicketPrice(price);
+    console.log(`Price set to: IDR ${price}`);
+  };
+
+  // State untuk mengontrol sidebar
+        const [isSidebarActive, setIsSidebarActive] = useState(false);
+      
+        // Fungsi untuk toggle sidebar
+        const toggleSidebar = () => {
+          setIsSidebarActive(!isSidebarActive);
+        };
+      
+        // Fungsi untuk navigasi
+        const handleNavigation = (section) => {
+          window.location.href = `#${section}`;
+        };
+
+  return (
+    <div>
+      {/* Header */}
+      <div className="header">
+        <div className="d-flex align-items-center">
+          <div className="hamburger-menu" onClick={toggleSidebar}>
+            <div />
+            <div />
+            <div />
+          </div>
+          <h2 className="text-danger ms-3 mb-0 logo">Ticketing</h2>
+        </div>
+        <div className="d-flex align-items-center">
+          <div className="search-bar me-3">
+            <i className="fas fa-search"></i>
+            <input placeholder="cari film" type="text" />
+          </div>
+          <div className="notif">
+            <i className="fas fa-bell fa-2x me-3"></i>
+          </div>
+          <div className="user-info">
+          <span onClick={goToProfile} className="text-decoration-none text-reset d-flex" style={{cursor: 'pointer'}}>
+                        <i className="fas fa-user-circle fa-2x"></i>
+                        <span className="align-self-center">profile</span>
+          </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="d-flex">
+            {/* Sidebar */}
+            <div className={`sidebar ${isSidebarActive ? "active" : ""}`} id="sidebar">
+            <a className="active" href="/" onClick={() => handleNavigation("movie")}>
+                <i className="fas fa-film pe-2"></i>Movie
+            </a>
+            <a href="/trending" onClick={() => handleNavigation("trending")}>
+                <i className="fas fa-fire pe-2"></i>Trending
+            </a>
+            <a href="/food" onClick={() => handleNavigation("food")}>
+                <i className="fas fa-utensils pe-2"></i>Food
+            </a>
+            </div>
+
+      {/* Main Content */}
+            <div className="flex-grow-1">
+              <div className="main-content">
+                <div className="d-flex justify-content-center">
+                  <div className="poster p-2">
+                    <img src="/images/mario.jpg" alt="Mario Movie" />
+                  </div>
+                  <div className="desc p-2 ms-3">
+                    <h2>The Super Mario Bros. Movie</h2>
+                    <p>
+                      A plumber named Mario travels through an underground labyrinth
+                      with his brother Luigi, trying to save a captured princess.
+                    </p>
+                    <p className="rating">
+                      3.8 <span className="star">★★★☆☆</span>
+                    </p>
+                    <p>
+                      <i className="bi bi-stopwatch mt-2"></i> 1 jam 32 menit
+                    </p>
+                  </div>
+                </div>
+    
+                {/* Booking Section */}
+                <div className="book d-flex justify-content-center">
+                  <div className="dropdown">
+                    <button
+                      className="btn btn-danger dropdown-toggle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Playing In
+                    </button>
+                    <ul className="dropdown-menu">
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Action
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Another action
+                        </a>
+                      </li>
+                      <li>
+                        <a className="dropdown-item" href="#">
+                          Something else here
+                        </a>
+                      </li>
+                    </ul>
+                    <button className="btn btn-outline-danger m-2">
+                      Watch Trailer
+                    </button>
+                  </div>
+                </div>
+    
+                <p className="available m-2">
+                  Ticket Available on 10 October 2024
+                </p>
+
+        {/* Tanggal Tab */}
+        <nav>
+          <div className="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
+            {Object.keys(theatreData).map((date) => (
+              <button
+                key={date}
+                className={`nav-link nav-color ${selectedDate === date ? 'active' : ''}`}
+                onClick={() => setSelectedDate(date)}
+              >
+                {date}
+              </button>
+            ))}
+          </div>
+        </nav>
+        {/* Konten Berdasarkan Tanggal */}
+        <div className="theatre-area mt-3">
+          {theatreData[selectedDate]?.map((theatre, index) => (
+            <div className="theatre-card p-2 mb-3" key={index}>
+              <h3>{theatre.name}</h3>
+              <p>{theatre.address}</p>
+              <div className="time d-flex justify-content-center">
+                <button
+                  className="btn btn-jam m-2"
+                  onClick={() => handleSetPrice(50000)}
+                >
+                  Jam 1
+                </button>
+                <button
+                  className="btn btn-jam m-2"
+                  onClick={() => handleSetPrice(70000)}
+                >
+                  Jam 2
+                </button>
+                <button
+                  className="btn btn-jam m-2"
+                  onClick={() => handleSetPrice(90000)}
+                >
+                  Jam 3
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Total Harga */}
+        <div className="confirm d-flex">
+          <h1 className="total me-auto p-2">
+            Total Harga : IDR <span>{ticketPrice}</span>
+          </h1>
+          <div className="submit-btn">
+            <button className="btn btn-outline-danger p-3">
+              <a href="/pilih-kursi" className="text-decoration-none text-reset">
+                Konfirmasi
+              </a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  );
+}
+
+export default PilihBioskop
