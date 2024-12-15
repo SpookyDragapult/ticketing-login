@@ -11,6 +11,14 @@ function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
+
+    const style = {
+        backgroundImage: "url('/images/rm222-mind-22.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+    };
+
     const handleRegisterClick = () => {
         setIsActive(true); // Show Sign Up form
     };
@@ -59,9 +67,9 @@ function Login() {
     };
 
     return (
+        <div style={style}>
         <div className='d-flex flex-row justify-content-center'>
             <div className='d-flex flex-column'>
-          
           <div className='p-5 m-5'></div>
         <div className={`${styles.container} ${isActive ? styles.active : ''}`} id="container">
             {/* Sign Up Form */}
@@ -150,6 +158,8 @@ function Login() {
         </div>
         </div>
         </div>
+        </div>
+       
         
       
     );

@@ -311,3 +311,7 @@ body {
 .detail-kursi {
     text-align: left;
 }
+
+.modal {
+    color: #151515;
+}

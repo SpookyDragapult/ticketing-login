@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useBooking } from '../contexts/BookingContext';
 import '../styles/Pilih-Bioskop.css';
 
 function PilihBioskop() {
   const navigate = useNavigate()
+  const { updateTheater, updateSchedule } = useBooking(); // Access context functions
+  const [selectedDate, setSelectedDate] = useState('10 Oktober');
+  const [selectedTheater, setSelectedTheater] = useState(null);
+  const [selectedSchedule, setSelectedSchedule] = useState(null);
 
   const goToProfile = () => {
     navigate('/profile', {
@@ -11,8 +16,6 @@ function PilihBioskop() {
     })
   }
 
-  const [ticketPrice, setTicketPrice] = useState(0);
-  const [selectedDate, setSelectedDate] = useState('10 Oktober');
 
   // Data mock untuk setiap tanggal
   const theatreData = {
@@ -30,10 +33,24 @@ function PilihBioskop() {
     ],
   };
 
-  const handleSetPrice = (price) => {
-    setTicketPrice(price);
-    console.log(`Price set to: IDR ${price}`);
+  const handleTheaterClick = (theater) => {
+    setSelectedTheater(theater);
+    updateTheater(theater); // Update theater in context
   };
+
+  const handleScheduleClick = (schedule) => {
+    setSelectedSchedule(schedule);
+    updateSchedule(schedule); // Update schedule in context
+  };
+
+  const handleConfirm = () => {
+    if (selectedTheater && selectedSchedule) {
+      navigate('/pilih-kursi'); // Navigate to the seat selection page
+    } else {
+      alert('Please select a theater and schedule first!');
+    }
+  };
+
 
   // State untuk mengontrol sidebar
         const [isSidebarActive, setIsSidebarActive] = useState(false);
@@ -153,11 +170,11 @@ function PilihBioskop() {
 
         {/* Tanggal Tab */}
         <nav>
-          <div className="nav nav-tabs justify-content-center" id="nav-tab" role="tablist">
+          <div className="nav nav-tabs justify-content-center">
             {Object.keys(theatreData).map((date) => (
               <button
                 key={date}
-                className={`nav-link nav-color ${selectedDate === date ? 'active' : ''}`}
+                className={`nav-link ${selectedDate === date ? 'active' : ''}`}
                 onClick={() => setSelectedDate(date)}
               >
                 {date}
@@ -174,19 +191,28 @@ function PilihBioskop() {
               <div className="time d-flex justify-content-center">
                 <button
                   className="btn btn-jam m-2"
-                  onClick={() => handleSetPrice(50000)}
+                  onClick={() => {
+                    handleTheaterClick(theatre.name);
+                    handleScheduleClick('Jam 1');
+                  }}
                 >
                   Jam 1
                 </button>
                 <button
                   className="btn btn-jam m-2"
-                  onClick={() => handleSetPrice(70000)}
+                  onClick={() => {
+                    handleTheaterClick(theatre.name);
+                    handleScheduleClick('Jam 2');
+                  }}
                 >
                   Jam 2
                 </button>
                 <button
                   className="btn btn-jam m-2"
-                  onClick={() => handleSetPrice(90000)}
+                  onClick={() => {
+                    handleTheaterClick(theatre.name);
+                    handleScheduleClick('Jam 3');
+                  }}
                 >
                   Jam 3
                 </button>
@@ -198,16 +224,13 @@ function PilihBioskop() {
         {/* Total Harga */}
         <div className="confirm d-flex">
           <h1 className="total me-auto p-2">
-            Total Harga : IDR <span>{ticketPrice}</span>
+            Selected: {selectedTheater || 'None'} - {selectedSchedule || 'None'}
           </h1>
-          <div className="submit-btn">
-            <button className="btn btn-outline-danger p-3">
-              <a href="/pilih-kursi" className="text-decoration-none text-reset">
-                Konfirmasi
-              </a>
-            </button>
-          </div>
+          <button className="btn btn-outline-danger p-3" onClick={handleConfirm}>
+            Confirm
+          </button>
         </div>
+
       </div>
     </div>
     </div>
